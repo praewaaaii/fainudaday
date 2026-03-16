@@ -3,210 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday น้องฝ้าย 🧁</title>
+<title>HBD น้องฝ้าย 🧁</title>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-body {
-    margin: 0;
-    text-align: center;
-    font-family: 'Tahoma', sans-serif;
-    background: linear-gradient(135deg, #ffd6e7, #ffeef5);
-    overflow: hidden;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 60px 0;
-    box-sizing: border-box;
-}
+    body {
+        margin: 0;
+        text-align: center;
+        font-family: 'Tahoma', sans-serif;
+        background: linear-gradient(135deg, #ffd6e7, #ffeef5);
+        overflow: hidden;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 50px 0;
+        box-sizing: border-box;
+    }
 
-.header-group { z-index: 10; }
-h1 { font-size: 6vw; color: #ff4d88; margin: 0; }
-#hintText { font-size: 4vw; color: #ff4d88; margin-top: 15px; min-height: 1.5em; font-weight: bold; }
+    /* หัวข้อ */
+    .header-group { z-index: 100; }
+    h1 { font-size: 6vw; color: #ff4d88; margin: 0; }
+    #hintText { 
+        font-size: 4vw; 
+        color: #ff4d88; 
+        margin-top: 15px; 
+        min-height: 1.5em; 
+        font-weight: bold; 
+    }
 
-.cupcake-wrapper {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-    z-index: 20;
-    margin-bottom: 5vh;
-}
+    /* คัพเค้กและเทียน */
+    .cupcake-wrapper {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        z-index: 50;
+        margin-bottom: 5vh;
+    }
 
-.cupcake { font-size: 25vw; line-height: 1; user-select: none; }
+    .cupcake { font-size: 25vw; line-height: 1; user-select: none; }
 
-.numbers {
-    position: absolute;
-    top: -12vw;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    font-size: 14vw;
-    font-weight: bold;
-    color: #ff4d88;
-    text-shadow: 2px 2px 0px #fff;
-}
+    .numbers {
+        position: absolute;
+        top: -12vw;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 15px;
+        font-size: 14vw;
+        font-weight: bold;
+        color: #ff4d88;
+        text-shadow: 2px 2px 0px #fff;
+    }
 
-.flame {
-    position: absolute;
-    top: -7vw;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 8vw;
-    animation: flicker 0.5s infinite alternate;
-}
+    .flame {
+        position: absolute;
+        top: -7vw;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 8vw;
+        animation: flicker 0.5s infinite alternate;
+    }
 
-@keyframes flicker {
-    from { opacity: 0.8; transform: translateX(-50%) scale(1); }
-    to { opacity: 1; transform: translateX(-50%) scale(1.1); }
-}
+    @keyframes flicker {
+        from { opacity: 0.8; transform: translateX(-50%) scale(1); }
+        to { opacity: 1; transform: translateX(-50%) scale(1.1); }
+    }
 
-.popup {
-    position: absolute;
-    background: #ffc9dd;
-    padding: 20px 30px;
-    border-radius: 25px;
-    font-size: 4vw;
-    color: #ff4d88;
-    font-weight: bold;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 100;
-}
+    /* คำอวยพรที่เด้งออกมา */
+    .popup {
+        position: fixed;
+        background: #ffc9dd;
+        padding: 15px 25px;
+        border-radius: 20px;
+        font-size: 4vw;
+        color: #ff4d88;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        z-index: 200;
+        pointer-events: none;
+    }
 
-@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
-
-.heart {
-    position: absolute;
-    pointer-events: none;
-    z-index: 999;
-    /* ปรับให้ช้าลงเป็น 6 วินาที */
-    animation: explode 6s ease-out forwards;
-}
-
-@keyframes explode {
-    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-    20% { opacity: 1; }
-    100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(var(--tr)) scale(1.8); opacity: 0; }
-}
+    /* หัวใจพลุ - ปรับให้ช้าลงและฟุ้ง */
+    .heart {
+        position: fixed;
+        pointer-events: none;
+        z-index: 10;
+        transition: all 5s ease-out; /* ใช้ Transition แทน Animation เพื่อความชัวร์ */
+    }
 </style>
 </head>
 
 <body>
 
-<div class="header-group">
-    <h1>Happy Birthday น้องฝ้าย 🐽</h1>
-    <p id="hintText"></p>
-</div>
-
-<div class="cupcake-wrapper" onclick="cakeClick()">
-    <div class="numbers">
-        <div style="position:relative;">
-            <span class="flame">🔥</span>2
-        </div>
-        <div style="position:relative;">
-            <span class="flame">🔥</span>1
-        </div>
+    <div class="header-group">
+        <h1>Happy Birthday น้องฝ้าย 🐽</h1>
+        <p id="hintText"></p>
     </div>
-    <div class="cupcake">🧁</div>
-</div>
+
+    <div class="cupcake-wrapper" id="mainCake">
+        <div class="numbers">
+            <div style="position:relative;">
+                <span class="flame">🔥</span>2
+            </div>
+            <div style="position:relative;">
+                <span class="flame">🔥</span>1
+            </div>
+        </div>
+        <div class="cupcake">🧁</div>
+    </div>
 
 <script>
-window.onload = function() {
-    Swal.fire({
-        title: 'วันนี้วันเกิดใครน้าาา?',
-        showDenyButton: true,
-        confirmButtonText: 'น้องฝ้ายแฟนแพรวา',
-        denyButtonText: 'หมูฝ้ายแฟนแพรวา',
-        allowOutsideClick: false,
-        confirmButtonColor: '#ff4d88',
-        denyButtonColor: '#ff66a3'
-    }).then((result) => {
+    // ส่วนแสดงผล Choice เมื่อโหลดหน้า
+    window.onload = function() {
         Swal.fire({
-            title: 'ถูกต้องที่สุด! 🎉',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1500
+            title: 'วันนี้วันเกิดใครน้าาา?',
+            text: 'เลือกให้ถูกคนนะเจ้าของวันเกิดน่ะ!',
+            showDenyButton: true,
+            confirmButtonText: 'น้องฝ้ายแฟนแพรวา',
+            denyButtonText: 'หมูฝ้ายแฟนแพรวา',
+            allowOutsideClick: false,
+            confirmButtonColor: '#ff4d88',
+            denyButtonColor: '#ff66a3'
+        }).then(() => {
+            Swal.fire({
+                title: 'ถูกต้องที่สุด! 🎉',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500
+            });
         });
-    });
-};
+    };
 
-let clickCount = 0;
-let candleOut = false;
+    let count = 0;
+    let isDone = false;
+    const cake = document.getElementById('mainCake');
 
-function showPopup(text, count) {
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerText = text;
-    
-    // กำหนดตำแหน่งตามจำนวนครั้งที่กด
-    const positions = [
-        { top: '25%', left: '10%' },
-        { top: '40%', right: '10%' },
-        { top: '55%', left: '15%' }
-    ];
-    
-    const pos = positions[count - 1];
-    popup.style.top = pos.top;
-    if(pos.left) popup.style.left = pos.left;
-    if(pos.right) popup.style.right = pos.right;
+    // คลิกเค้ก
+    cake.onclick = function() {
+        if (isDone) return;
+        count++;
 
-    document.body.appendChild(popup);
-    setTimeout(() => popup.remove(), 2500);
-}
+        if (count === 1) spawnPopup("รักหมูฝ้ายที่สุดในโลก ", 20, 15);
+        if (count === 2) spawnPopup("ขอให้สุขภาพแข็งแรง ", 60, 75);
+        if (count === 3) spawnPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า >< ", 40, 45);
 
-function createHearts() {
-    for (let i = 0; i < 150; i++) {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerHTML = ["💖", "💗", "💓", "💝", "✨"][Math.floor(Math.random() * 5)];
-        
-        // จุดเริ่มระเบิด (กลางคัพเค้ก)
-        heart.style.left = "50%";
-        heart.style.top = "75%";
+        if (count === 4) {
+            // ดับไฟ
+            document.querySelectorAll('.flame').forEach(f => f.style.display = 'none');
+            // ขึ้นข้อความ
+            document.getElementById('hintText').innerHTML = "<b>เป่าเทียนดับแล้วววววววววว มีความสุขมากๆ นะคะ</b>";
+            isDone = true;
+            // ระเบิดหัวใจ
+            fireworkHearts();
+        }
+    };
 
-        const angle = Math.random() * Math.PI * 2;
-        // ปรับแรงระเบิดให้กระจายกว้างขึ้น (เต็ม iPad)
-        const dist = Math.random() * 100 + 40; 
-        
-        const tx = Math.cos(angle) * dist + "vw";
-        const ty = Math.sin(angle) * dist + "vh";
-        const tr = (Math.random() * 1000 - 500) + "deg";
-
-        heart.style.setProperty('--tx', tx);
-        heart.style.setProperty('--ty', ty);
-        heart.style.setProperty('--tr', tr);
-        heart.style.fontSize = (Math.random() * 40 + 20) + "px";
-
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 6000);
+    function spawnPopup(txt, x, y) {
+        const p = document.createElement('div');
+        p.className = 'popup';
+        p.innerText = txt;
+        p.style.left = x + '%';
+        p.style.top = y + '%';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 2500);
     }
-}
 
-function cakeClick() {
-    if (candleOut) return;
-    
-    clickCount++; // บวกค่าก่อน
+    function fireworkHearts() {
+        for (let i = 0; i < 120; i++) {
+            const h = document.createElement('div');
+            h.className = 'heart';
+            h.innerHTML = ["💖", "💗", "💓", "💝", "✨"][Math.floor(Math.random() * 5)];
+            h.style.fontSize = (Math.random() * 30 + 20) + 'px';
+            
+            // เริ่มจากกลางเค้ก
+            h.style.left = '50%';
+            h.style.top = '75%';
+            h.style.opacity = '1';
 
-    if (clickCount === 1) {
-        showPopup("รักหมูฝ้ายที่สุดในโลก", 1);
-    } else if (clickCount === 2) {
-        showPopup("ขอให้สุขภาพแข็งแรง", 2);
-    } else if (clickCount === 3) {
-        showPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า ><", 3);
-    } else if (clickCount === 4) {
-        // ดับไฟ
-        document.querySelectorAll(".flame").forEach(f => f.style.display = "none");
-        
-        // แสดงข้อความอวยพร
-        document.getElementById("hintText").innerHTML = "เป่าเทียนดับแล้ว! มีความสุขมากๆ นะคะ 🎉";
-        
-        candleOut = true;
-        createHearts(); // พลุหัวใจ
+            document.body.appendChild(h);
+
+            // สุ่มทิศทางระเบิด
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * 100 + 40; 
+            const tx = Math.cos(angle) * dist + 'vw';
+            const ty = Math.sin(angle) * dist + 'vh';
+
+            // ใช้ Timeout นิดนึงเพื่อให้ Transition ทำงาน
+            setTimeout(() => {
+                h.style.transform = `translate(${tx}, ${ty}) rotate(${Math.random() * 360}deg)`;
+                h.style.opacity = '0';
+            }, 50);
+
+            setTimeout(() => h.remove(), 5000);
+        }
     }
-}
 </script>
 
 </body>
