@@ -20,14 +20,15 @@ body{
     justify-content: center;
 }
 
-h1{ font-size:6vw; color:#ff4d88; margin-bottom: 10px; }
-p{ font-size:3vw; color:#ff4d88; }
+h1{ font-size:6vw; color:#ff4d88; margin-bottom: 10px; z-index: 5;}
+p{ font-size:3vw; color:#ff4d88; z-index: 5;}
 
 .cupcake-wrapper {
     position: relative;
     display: inline-block;
     cursor: pointer;
     margin-top: 80px;
+    z-index: 10;
 }
 
 .cupcake { font-size: 25vw; line-height: 1; }
@@ -45,8 +46,6 @@ p{ font-size:3vw; color:#ff4d88; }
     text-shadow: 2px 2px 0px #fff;
 }
 
-.num-item { position: relative; }
-
 .flame {
     position: absolute;
     top: -6vw;
@@ -61,6 +60,7 @@ p{ font-size:3vw; color:#ff4d88; }
     to { opacity: 1; transform: translateX(-50%) scale(1.1); }
 }
 
+/* popup คำอวยพร */
 .popup{
     position:absolute;
     background:#ffc9dd;
@@ -74,19 +74,27 @@ p{ font-size:3vw; color:#ff4d88; }
 
 @keyframes pop{ from{transform:scale(0.7);} to{transform:scale(1);} }
 
-.heart{
-    position:absolute;
-    pointer-events:none;
+/* หัวใจแบบพลุ */
+.heart {
+    position: absolute;
+    pointer-events: none;
     z-index: 999;
-    animation:float 4s linear forwards;
+    /* อนิเมชั่นระเบิดออกและจางหาย */
+    animation: explode 3s ease-out forwards;
 }
 
-@keyframes float{
-    0%{ transform:translate(0,0) scale(1); opacity:1; }
-    100%{ transform:translate(var(--x), -120vh) scale(1.4); opacity:0; }
+@keyframes explode {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+    }
+    100% {
+        /* ใช้ตัวแปรจาก JS ในการเคลื่อนที่ */
+        transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(1.5);
+        opacity: 0;
+    }
 }
 
-/* ตกแต่งสีปุ่ม Choice */
 .swal2-confirm { background-color: #ff4d88 !important; }
 .swal2-deny { background-color: #ff66a3 !important; }
 </style>
@@ -95,15 +103,15 @@ p{ font-size:3vw; color:#ff4d88; }
 <body>
 
 <h1>Happy Birthday น้องฝ้าย 🐽</h1>
-<p id="hintText">กดที่คัพเค้กสิ</p>
+<p id="hintText">กดที่เค้กสิ</p>
 
 <div class="cupcake-wrapper" onclick="cakeClick()">
     <div class="numbers">
-        <div class="num-item">
+        <div class="num-item" style="position:relative;">
             <span class="flame">🔥</span>
             2
         </div>
-        <div class="num-item">
+        <div class="num-item" style="position:relative;">
             <span class="flame">🔥</span>
             1
         </div>
@@ -113,24 +121,22 @@ p{ font-size:3vw; color:#ff4d88; }
 
 <script>
 window.onload = function() {
-    // หน้าเลือก Choice
     Swal.fire({
-        title: 'วันนี้วันเกิดใครน้าาา?',
+        title: 'วันนี้วันเกิดใครน้าาา? 🧁✨',
         icon: 'question',
         showDenyButton: true,
-        confirmButtonText: 'น้องฝ้ายแฟนแพรวา 💖',
-        denyButtonText: 'หมูฝ้ายแฟนแพรวา 🐽',
+        confirmButtonText: 'น้องฝ้ายแฟนแพรวา',
+        denyButtonText: 'หมูฝ้ายแฟนแพรวา',
         allowOutsideClick: false,
         background: '#fff',
         color: '#ff4d88'
     }).then((result) => {
         if (result.isConfirmed || result.isDenied) {
-            // หน้า "ถูกต้องที่สุด" แบบไม่ต้องกด (เด้งแล้วหายเองใน 1.5 วินาที)
             Swal.fire({
                 title: 'ถูกต้องที่สุด! 🎉',
                 icon: 'success',
-                showConfirmButton: false, // เอาปุ่มออก
-                timer: 1500, // แสดงแค่ 1.5 วินาทีแล้วปิดเอง
+                showConfirmButton: false,
+                timer: 1500,
                 background: '#fff',
                 color: '#ff4d88'
             });
@@ -160,17 +166,37 @@ function showPopup(text){
 }
 
 function createHearts(){
-    for(let i=0;i<150;i++){
-        const heart=document.createElement("div")
-        heart.className="heart"
-        heart.innerHTML="💖"
-        heart.style.left=Math.random()*100+"vw"
-        heart.style.bottom="-20px"
-        heart.style.fontSize=(20+Math.random()*40)+"px"
-        let randomX=(Math.random()*200-100)+"vw"
-        heart.style.setProperty("--x",randomX)
-        document.body.appendChild(heart)
-        setTimeout(()=>{ heart.remove() },4000)
+    const amount = 150; // จำนวนหัวใจที่ระเบิดออก
+    const container = document.body;
+
+    for(let i=0; i<amount; i++){
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = ["💖", "💗", "💓", "💝", "✨"][Math.floor(Math.random() * 5)];
+        
+        // จุดเริ่มต้นอยู่ที่ตัวเค้ก (กลางจอ)
+        heart.style.left = "50%";
+        heart.style.top = "55%";
+
+        // คำนวณมุมและระยะทางแบบวงกลม (พลุ)
+        const angle = Math.random() * Math.PI * 2; // สุ่มมุม 360 องศา
+        const velocity = Math.random() * 100 + 50; // ความแรงในการพุ่ง
+        
+        // แปลงมุมเป็นพิกัด X และ Y (พุ่งกระจายเต็มจอ)
+        const tx = Math.cos(angle) * velocity + "vw";
+        const ty = Math.sin(angle) * velocity + "vh";
+        const tr = (Math.random() * 360) + "deg"; // หมุนตัวหัวใจ
+
+        heart.style.setProperty('--tx', tx);
+        heart.style.setProperty('--ty', ty);
+        heart.style.setProperty('--tr', tr);
+        
+        heart.style.fontSize = (Math.random() * 30 + 15) + "px";
+
+        container.appendChild(heart);
+        
+        // ลบออกเมื่อจบอนิเมชั่น
+        setTimeout(() => { heart.remove(); }, 3000);
     }
 }
 
@@ -178,15 +204,17 @@ function cakeClick(){
     if(candleOut) return
     clickCount++
 
-    if(clickCount===1){ showPopup("แพรวารักฝ้ายที่สุดในโลก") }
-    else if(clickCount===2){ showPopup("ขอให้เธอสุขภาพแข็งแรง") }
+    if(clickCount===1){ showPopup("รักหมูฝ้ายที่สุดในโลก") }
+    else if(clickCount===2){ showPopup("ขอให้สุขภาพแข็งแรง") }
     else if(clickCount===3){ showPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า ><") }
     else if(clickCount===4){
         const flames = document.querySelectorAll(".flame");
         flames.forEach(f => f.style.display = "none");
-        document.getElementById("hintText").innerText = "เป่าเทียนดับแล้ว! มีความสุขมากๆ นะที่รัก"
-        candleOut=true
-        createHearts()
+        
+        document.getElementById("hintText").innerHTML = "<b>เป่าเทียนดับแล้ว! มีความสุขมากๆ นะคะ 🎉</b>";
+        
+        candleOut = true;
+        createHearts(); // เรียกฟังก์ชันระเบิดพลุหัวใจ
     }
 }
 </script>
