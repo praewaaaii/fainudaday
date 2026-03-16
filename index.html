@@ -1,71 +1,79 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Happy Birthday น้องฝ้าย</title>
 
 <style>
 
 body{
-    margin:0;
-    text-align:center;
-    font-family:Tahoma;
-    background:linear-gradient(135deg,#ffd6e7,#ffeef5);
-    overflow:hidden;
+margin:0;
+text-align:center;
+font-family:Tahoma;
+background:linear-gradient(135deg,#ffd6e7,#ffeef5);
+overflow:hidden;
+height:100vh;
 }
 
 h1{
-    margin-top:80px;
-    font-size:55px;
-    color:#ff4d88;
+margin-top:60px;
+font-size:6vw;
+color:#ff4d88;
 }
 
 p{
-    font-size:26px;
-    color:#ff4d88;
+font-size:3vw;
+color:#ff4d88;
 }
 
 .cake{
-    font-size:200px;
-    cursor:pointer;
-    margin-top:40px;
+font-size:25vw;
+cursor:pointer;
+margin-top:20px;
 }
 
 .flame{
-    font-size:60px;
+font-size:8vw;
 }
 
 /* popup */
 
 .popup{
-    position:absolute;
-    left:60%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    background:#ffc9dd;
-    padding:20px 35px;
-    border-radius:25px;
-    font-size:22px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.2);
+position:absolute;
+top:60%;
+background:#ffc9dd;
+padding:20px 35px;
+border-radius:25px;
+font-size:2.5vw;
+box-shadow:0 6px 18px rgba(0,0,0,0.2);
+animation:pop 0.3s ease;
+}
+
+@keyframes pop{
+from{transform:scale(0.7);}
+to{transform:scale(1);}
 }
 
 /* hearts */
 
 .heart{
-    position:absolute;
-    font-size:35px;
-    animation:float 3s linear infinite;
+position:absolute;
+font-size:35px;
+animation:float 4s linear forwards;
 }
 
 @keyframes float{
-    from{
-        transform:translateY(0);
-        opacity:1;
-    }
-    to{
-        transform:translateY(-800px);
-        opacity:0;
-    }
+0%{
+transform:translateY(0);
+opacity:1;
+}
+100%{
+transform:translateY(-120vh);
+opacity:0;
+}
 }
 
 </style>
@@ -80,69 +88,81 @@ p{
 🎂 <span id="flame" class="flame">🔥</span>
 </div>
 
-<div id="popupContainer"></div>
-
 <script>
 
 let clickCount = 0;
+let candleOut = false;
 
 function showPopup(text){
 
-    const popup = document.createElement("div");
-    popup.classList.add("popup");
-    popup.innerText = text;
+const popup = document.createElement("div");
+popup.className="popup";
+popup.innerText=text;
 
-    document.getElementById("popupContainer").appendChild(popup);
+/* สลับซ้ายขวา */
 
-    setTimeout(()=>{
-        popup.remove();
-    },2000);
+if(clickCount % 2 === 1){
+popup.style.left="15%";
+}else{
+popup.style.right="15%";
+}
+
+document.body.appendChild(popup);
+
+setTimeout(()=>{
+popup.remove();
+},2200);
+
 }
 
 function createHearts(){
 
-    for(let i=0;i<50;i++){
+for(let i=0;i<80;i++){
 
-        const heart=document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerHTML="💖";
+const heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="💖";
 
-        heart.style.left=Math.random()*window.innerWidth+"px";
-        heart.style.bottom="0px";
+heart.style.left=Math.random()*100+"vw";
+heart.style.bottom="-20px";
 
-        document.body.appendChild(heart);
+document.body.appendChild(heart);
 
-        setTimeout(()=>{
-            heart.remove();
-        },3000);
+setTimeout(()=>{
+heart.remove();
+},4000);
 
-    }
+}
 
 }
 
 function cakeClick(){
 
-    clickCount++;
+if(candleOut) return;
 
-    if(clickCount==1){
-        showPopup("รักหมูฝ้ายที่สุดในโลก 💖");
-    }
+clickCount++;
 
-    else if(clickCount==2){
-        showPopup("ขอให้สุขภาพแข็งแรง ✨");
-    }
+if(clickCount===1){
+showPopup("รักหมูฝ้ายที่สุดในโลก 💖");
+}
 
-    else if(clickCount==3){
-        showPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า >< 💸");
-    }
+else if(clickCount===2){
+showPopup("ขอให้สุขภาพแข็งแรง ✨");
+}
 
-    else if(clickCount==4){
+else if(clickCount===3){
+showPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า >< 💸");
+}
 
-        document.getElementById("flame").innerHTML="";
+else if(clickCount===4){
 
-        createHearts();
+document.getElementById("flame").style.display="none";
 
-    }
+candleOut=true;
+
+createHearts();
+
+}
 
 }
 
