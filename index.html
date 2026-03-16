@@ -20,18 +20,9 @@ body{
     justify-content: center;
 }
 
-h1{
-    font-size:6vw;
-    color:#ff4d88;
-    margin-bottom: 10px;
-}
+h1{ font-size:6vw; color:#ff4d88; margin-bottom: 10px; }
+p{ font-size:3vw; color:#ff4d88; }
 
-p{
-    font-size:3vw;
-    color:#ff4d88;
-}
-
-/* ส่วนของคัพเค้กและตัวเลข */
 .cupcake-wrapper {
     position: relative;
     display: inline-block;
@@ -39,10 +30,7 @@ p{
     margin-top: 80px;
 }
 
-.cupcake {
-    font-size: 25vw;
-    line-height: 1;
-}
+.cupcake { font-size: 25vw; line-height: 1; }
 
 .numbers {
     position: absolute;
@@ -57,9 +45,7 @@ p{
     text-shadow: 2px 2px 0px #fff;
 }
 
-.num-item {
-    position: relative;
-}
+.num-item { position: relative; }
 
 .flame {
     position: absolute;
@@ -75,7 +61,6 @@ p{
     to { opacity: 1; transform: translateX(-50%) scale(1.1); }
 }
 
-/* popup */
 .popup{
     position:absolute;
     background:#ffc9dd;
@@ -87,12 +72,8 @@ p{
     z-index: 100;
 }
 
-@keyframes pop{
-    from{transform:scale(0.7);}
-    to{transform:scale(1);}
-}
+@keyframes pop{ from{transform:scale(0.7);} to{transform:scale(1);} }
 
-/* hearts */
 .heart{
     position:absolute;
     pointer-events:none;
@@ -105,13 +86,9 @@ p{
     100%{ transform:translate(var(--x), -120vh) scale(1.4); opacity:0; }
 }
 
-/* ปรับแต่งปุ่ม SweetAlert ให้สีชมพูเข้ากับธีม */
-.swal2-styled.swal2-confirm {
-    background-color: #ff4d88 !important;
-}
-.swal2-styled.swal2-deny {
-    background-color: #ff66a3 !important;
-}
+/* ตกแต่งสีปุ่ม Choice */
+.swal2-confirm { background-color: #ff4d88 !important; }
+.swal2-deny { background-color: #ff66a3 !important; }
 </style>
 </head>
 
@@ -135,11 +112,10 @@ p{
 </div>
 
 <script>
-// แก้ไขหน้าแรกให้เลือก "น้องฝ้ายแฟนแพรวา" หรือ "หมูฝ้ายแฟนแพรวา"
 window.onload = function() {
+    // หน้าเลือก Choice
     Swal.fire({
-        title: 'วันนี้วันเกิดใครน้าาา? 🧁✨',
-        text: 'เลือกให้ถูกคนนะเจ้าของวันเกิดน่ะ!',
+        title: 'วันนี้วันเกิดใครน้าาา?',
         icon: 'question',
         showDenyButton: true,
         confirmButtonText: 'น้องฝ้ายแฟนแพรวา 💖',
@@ -149,12 +125,14 @@ window.onload = function() {
         color: '#ff4d88'
     }).then((result) => {
         if (result.isConfirmed || result.isDenied) {
+            // หน้า "ถูกต้องที่สุด" แบบไม่ต้องกด (เด้งแล้วหายเองใน 1.5 วินาที)
             Swal.fire({
                 title: 'ถูกต้องที่สุด! 🎉',
-                text: 'มีคำอวยพรซ่อนอยู่ในคัพเค้ก ลองกดดูสิ',
                 icon: 'success',
-                confirmButtonText: 'ไปดูกันเลย! ✨',
-                confirmButtonColor: '#ff4d88'
+                showConfirmButton: false, // เอาปุ่มออก
+                timer: 1500, // แสดงแค่ 1.5 วินาทีแล้วปิดเอง
+                background: '#fff',
+                color: '#ff4d88'
             });
         }
     });
@@ -175,22 +153,13 @@ function showPopup(text){
     popup.className="popup"
     popup.innerText=text
     popup.style.top = pos.top
-
-    if(pos.side==="left"){
-        popup.style.left="10%"
-    }else{
-        popup.style.right="10%"
-    }
-
+    if(pos.side==="left"){ popup.style.left="10%" }
+    else{ popup.style.right="10%" }
     document.body.appendChild(popup)
-
-    setTimeout(()=>{
-        popup.remove()
-    },2300)
+    setTimeout(()=>{ popup.remove() }, 2300)
 }
 
 function createHearts(){
-    // จัดเต็มหัวใจฟุ้งๆ กระจายทั่วจอ
     for(let i=0;i<150;i++){
         const heart=document.createElement("div")
         heart.className="heart"
@@ -198,14 +167,10 @@ function createHearts(){
         heart.style.left=Math.random()*100+"vw"
         heart.style.bottom="-20px"
         heart.style.fontSize=(20+Math.random()*40)+"px"
-
         let randomX=(Math.random()*200-100)+"vw"
         heart.style.setProperty("--x",randomX)
-
         document.body.appendChild(heart)
-        setTimeout(()=>{
-            heart.remove()
-        },4000)
+        setTimeout(()=>{ heart.remove() },4000)
     }
 }
 
@@ -213,22 +178,13 @@ function cakeClick(){
     if(candleOut) return
     clickCount++
 
-    if(clickCount===1){
-        showPopup("รักหมูฝ้ายที่สุดในโลก 💖")
-    }
-    else if(clickCount===2){
-        showPopup("ขอให้สุขภาพแข็งแรง ✨")
-    }
-    else if(clickCount===3){
-        showPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า >< 💸")
-    }
+    if(clickCount===1){ showPopup("แพรวารักฝ้ายที่สุดในโลก") }
+    else if(clickCount===2){ showPopup("ขอให้เธอสุขภาพแข็งแรง") }
+    else if(clickCount===3){ showPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า ><") }
     else if(clickCount===4){
-        // ดับไฟบนเลข 2 และ 1
         const flames = document.querySelectorAll(".flame");
         flames.forEach(f => f.style.display = "none");
-
-        document.getElementById("hintText").innerText = "เป่าเทียนดับแล้ว! มีความสุขมากๆ นะ ✨"
-        
+        document.getElementById("hintText").innerText = "เป่าเทียนดับแล้ว! มีความสุขมากๆ นะที่รัก"
         candleOut=true
         createHearts()
     }
