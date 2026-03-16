@@ -16,42 +16,39 @@ body{
     height:100vh;
     display: flex;
     flex-direction: column;
-    /* แบ่งพื้นที่ให้หัวข้ออยู่บน เค้กอยู่ล่าง */
-    justify-content: space-between; 
-    padding: 40px 0; /* เว้นขอบบนล่าง */
+    align-items: center;
+    /* กระจายให้หัวข้ออยู่บน เค้กอยู่ล่าง */
+    justify-content: space-between;
+    padding: 60px 0; 
     box-sizing: border-box;
 }
 
-.header-area {
-    margin-top: 20px;
+.header-group {
     z-index: 5;
 }
 
-h1{ font-size: 6vw; color:#ff4d88; margin: 0; }
-p{ font-size: 3vw; color:#ff4d88; margin-top: 10px; }
+h1{ font-size:6vw; color:#ff4d88; margin: 0; }
+p{ font-size:3vw; color:#ff4d88; margin-top: 15px; }
 
-/* ส่วนของคัพเค้กและตัวเลข ปรับให้อยู่ด้านล่าง */
 .cupcake-wrapper {
     position: relative;
     display: inline-block;
     cursor: pointer;
-    margin-bottom: 20px; /* ดันขึ้นจากขอบล่างนิดหน่อย */
     z-index: 10;
+    /* ขยับลงมาจากกึ่งกลาง */
+    margin-bottom: 40px; 
 }
 
-.cupcake { 
-    font-size: 22vw; /* ลดขนาดลงนิดนึงเพื่อให้พอดี iPad */
-    line-height: 1; 
-}
+.cupcake { font-size: 25vw; line-height: 1; }
 
 .numbers {
     position: absolute;
-    top: -10vw; /* ระยะห่างจากคัพเค้ก */
+    top: -10vw;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 10px;
-    font-size: 10vw;
+    font-size: 12vw;
     font-weight: bold;
     color: #ff4d88;
     text-shadow: 2px 2px 0px #fff;
@@ -85,16 +82,28 @@ p{ font-size: 3vw; color:#ff4d88; margin-top: 10px; }
 
 @keyframes pop{ from{transform:scale(0.7);} to{transform:scale(1);} }
 
+/* หัวใจแบบพลุ ปรับให้ช้าลง */
 .heart {
     position: absolute;
     pointer-events: none;
     z-index: 999;
-    animation: explode 3s ease-out forwards;
+    /* ปรับเวลาจาก 3s เป็น 5s เพื่อให้ช้าลง */
+    animation: explode 5s ease-out forwards;
 }
 
 @keyframes explode {
-    0% { transform: translate(0, 0) scale(0); opacity: 1; }
-    100% { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(1.5); opacity: 0; }
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+    }
+    /* ช่วงกลางให้ออกมาครึ่งทาง */
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(1.5);
+        opacity: 0;
+    }
 }
 
 .swal2-confirm { background-color: #ff4d88 !important; }
@@ -104,24 +113,24 @@ p{ font-size: 3vw; color:#ff4d88; margin-top: 10px; }
 
 <body>
 
-    <div class="header-area">
-        <h1>Happy Birthday น้องฝ้าย 🐽</h1>
-        <p id="hintText">กดที่คัพเค้กสิ</p>
-    </div>
+<div class="header-group">
+    <h1>Happy Birthday น้องฝ้าย 🐽</h1>
+    <p id="hintText">กดที่เค้กสิ</p>
+</div>
 
-    <div class="cupcake-wrapper" onclick="cakeClick()">
-        <div class="numbers">
-            <div class="num-item" style="position:relative;">
-                <span class="flame">🔥</span>
-                2
-            </div>
-            <div class="num-item" style="position:relative;">
-                <span class="flame">🔥</span>
-                1
-            </div>
+<div class="cupcake-wrapper" onclick="cakeClick()">
+    <div class="numbers">
+        <div class="num-item" style="position:relative;">
+            <span class="flame">🔥</span>
+            2
         </div>
-        <div class="cupcake">🧁</div>
+        <div class="num-item" style="position:relative;">
+            <span class="flame">🔥</span>
+            1
+        </div>
     </div>
+    <div class="cupcake">🧁</div>
+</div>
 
 <script>
 window.onload = function() {
@@ -171,27 +180,36 @@ function showPopup(text){
 }
 
 function createHearts(){
-    const amount = 150;
+    const amount = 150; 
     const container = document.body;
+
     for(let i=0; i<amount; i++){
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.innerHTML = ["💖", "💗", "💓", "💝", "✨"][Math.floor(Math.random() * 5)];
+        
+        // จุดระเบิดเริ่มจากตำแหน่งเค้กด้านล่าง
         heart.style.left = "50%";
-        heart.style.top = "75%"; // ระเบิดจากตำแหน่งคัพเค้กใหม่
+        heart.style.top = "75%"; 
 
         const angle = Math.random() * Math.PI * 2;
-        const velocity = Math.random() * 100 + 50;
+        // ปรับระยะการกระจายให้กว้างขึ้นและนุ่มขึ้น
+        const velocity = Math.random() * 120 + 30; 
+        
         const tx = Math.cos(angle) * velocity + "vw";
         const ty = Math.sin(angle) * velocity + "vh";
-        const tr = (Math.random() * 360) + "deg";
+        const tr = (Math.random() * 720 - 360) + "deg"; // หมุนเยอะขึ้น
 
         heart.style.setProperty('--tx', tx);
         heart.style.setProperty('--ty', ty);
         heart.style.setProperty('--tr', tr);
+        
         heart.style.fontSize = (Math.random() * 30 + 15) + "px";
+
         container.appendChild(heart);
-        setTimeout(() => { heart.remove(); }, 3000);
+        
+        // ลบออกหลังจากจบอนิเมชั่น 5 วินาที
+        setTimeout(() => { heart.remove(); }, 5000);
     }
 }
 
@@ -199,15 +217,17 @@ function cakeClick(){
     if(candleOut) return
     clickCount++
 
-    if(clickCount===1){ showPopup("รักหมูฝ้ายที่สุดในโลก 💖") }
-    else if(clickCount===2){ showPopup("ขอให้สุขภาพแข็งแรง ✨") }
-    else if(clickCount===3){ showPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า >< 💸") }
+    if(clickCount===1){ showPopup("รักหมูฝ้ายที่สุดในโลก") }
+    else if(clickCount===2){ showPopup("ขอให้สุขภาพแข็งแรง") }
+    else if(clickCount===3){ showPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า ><") }
     else if(clickCount===4){
         const flames = document.querySelectorAll(".flame");
         flames.forEach(f => f.style.display = "none");
+        
         document.getElementById("hintText").innerHTML = "<b>เป่าเทียนดับแล้ว! มีความสุขมากๆ นะคะ 🎉</b>";
+        
         candleOut = true;
-        createHearts();
+        createHearts(); 
     }
 }
 </script>
