@@ -17,7 +17,6 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* กระจายให้หัวข้ออยู่บน เค้กอยู่ล่าง */
     justify-content: space-between;
     padding: 60px 0; 
     box-sizing: border-box;
@@ -28,14 +27,15 @@ body{
 }
 
 h1{ font-size:6vw; color:#ff4d88; margin: 0; }
-p{ font-size:3vw; color:#ff4d88; margin-top: 15px; }
+
+/* จองพื้นที่ไว้สำหรับข้อความที่จะเด้งตอนเป่าดับ แต่ตอนแรกให้ว่างไว้ */
+p{ font-size:3vw; color:#ff4d88; margin-top: 15px; min-height: 1.5em; }
 
 .cupcake-wrapper {
     position: relative;
     display: inline-block;
     cursor: pointer;
     z-index: 10;
-    /* ขยับลงมาจากกึ่งกลาง */
     margin-bottom: 40px; 
 }
 
@@ -68,7 +68,6 @@ p{ font-size:3vw; color:#ff4d88; margin-top: 15px; }
     to { opacity: 1; transform: translateX(-50%) scale(1.1); }
 }
 
-/* popup คำอวยพร */
 .popup{
     position:absolute;
     background:#ffc9dd;
@@ -82,28 +81,17 @@ p{ font-size:3vw; color:#ff4d88; margin-top: 15px; }
 
 @keyframes pop{ from{transform:scale(0.7);} to{transform:scale(1);} }
 
-/* หัวใจแบบพลุ ปรับให้ช้าลง */
 .heart {
     position: absolute;
     pointer-events: none;
     z-index: 999;
-    /* ปรับเวลาจาก 3s เป็น 5s เพื่อให้ช้าลง */
     animation: explode 5s ease-out forwards;
 }
 
 @keyframes explode {
-    0% {
-        transform: translate(0, 0) scale(0);
-        opacity: 1;
-    }
-    /* ช่วงกลางให้ออกมาครึ่งทาง */
-    50% {
-        opacity: 0.8;
-    }
-    100% {
-        transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(1.5);
-        opacity: 0;
-    }
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(1.5); opacity: 0; }
 }
 
 .swal2-confirm { background-color: #ff4d88 !important; }
@@ -115,7 +103,7 @@ p{ font-size:3vw; color:#ff4d88; margin-top: 15px; }
 
 <div class="header-group">
     <h1>Happy Birthday น้องฝ้าย 🐽</h1>
-    
+    <p id="hintText"></p>
 </div>
 
 <div class="cupcake-wrapper" onclick="cakeClick()">
@@ -188,17 +176,15 @@ function createHearts(){
         heart.className = "heart";
         heart.innerHTML = ["💖", "💗", "💓", "💝", "✨"][Math.floor(Math.random() * 5)];
         
-        // จุดระเบิดเริ่มจากตำแหน่งเค้กด้านล่าง
         heart.style.left = "50%";
         heart.style.top = "75%"; 
 
         const angle = Math.random() * Math.PI * 2;
-        // ปรับระยะการกระจายให้กว้างขึ้นและนุ่มขึ้น
         const velocity = Math.random() * 120 + 30; 
         
         const tx = Math.cos(angle) * velocity + "vw";
         const ty = Math.sin(angle) * velocity + "vh";
-        const tr = (Math.random() * 720 - 360) + "deg"; // หมุนเยอะขึ้น
+        const tr = (Math.random() * 720 - 360) + "deg";
 
         heart.style.setProperty('--tx', tx);
         heart.style.setProperty('--ty', ty);
@@ -207,8 +193,6 @@ function createHearts(){
         heart.style.fontSize = (Math.random() * 30 + 15) + "px";
 
         container.appendChild(heart);
-        
-        // ลบออกหลังจากจบอนิเมชั่น 5 วินาที
         setTimeout(() => { heart.remove(); }, 5000);
     }
 }
@@ -224,7 +208,10 @@ function cakeClick(){
         const flames = document.querySelectorAll(".flame");
         flames.forEach(f => f.style.display = "none");
         
-        document.getElementById("hintText").innerHTML = "<b>เป่าเทียนดับแล้ว! มีความสุขมากๆ นะคะ 🎉</b>";
+        const hint = document.getElementById("hintText");
+        if(hint) {
+            hint.innerHTML = "<b>เป่าเทียนดับแล้ว! มีความสุขมากๆ นะคะ 🎉</b>";
+        }
         
         candleOut = true;
         createHearts(); 
