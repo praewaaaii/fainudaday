@@ -16,31 +16,42 @@ body{
     height:100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    /* แบ่งพื้นที่ให้หัวข้ออยู่บน เค้กอยู่ล่าง */
+    justify-content: space-between; 
+    padding: 40px 0; /* เว้นขอบบนล่าง */
+    box-sizing: border-box;
 }
 
-h1{ font-size:6vw; color:#ff4d88; margin-bottom: 10px; z-index: 5;}
-p{ font-size:3vw; color:#ff4d88; z-index: 5;}
+.header-area {
+    margin-top: 20px;
+    z-index: 5;
+}
 
+h1{ font-size: 6vw; color:#ff4d88; margin: 0; }
+p{ font-size: 3vw; color:#ff4d88; margin-top: 10px; }
+
+/* ส่วนของคัพเค้กและตัวเลข ปรับให้อยู่ด้านล่าง */
 .cupcake-wrapper {
     position: relative;
     display: inline-block;
     cursor: pointer;
-    margin-top: 80px;
+    margin-bottom: 20px; /* ดันขึ้นจากขอบล่างนิดหน่อย */
     z-index: 10;
 }
 
-.cupcake { font-size: 25vw; line-height: 1; }
+.cupcake { 
+    font-size: 22vw; /* ลดขนาดลงนิดนึงเพื่อให้พอดี iPad */
+    line-height: 1; 
+}
 
 .numbers {
     position: absolute;
-    top: -10vw;
+    top: -10vw; /* ระยะห่างจากคัพเค้ก */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 10px;
-    font-size: 12vw;
+    font-size: 10vw;
     font-weight: bold;
     color: #ff4d88;
     text-shadow: 2px 2px 0px #fff;
@@ -74,25 +85,16 @@ p{ font-size:3vw; color:#ff4d88; z-index: 5;}
 
 @keyframes pop{ from{transform:scale(0.7);} to{transform:scale(1);} }
 
-/* หัวใจแบบพลุ */
 .heart {
     position: absolute;
     pointer-events: none;
     z-index: 999;
-    /* อนิเมชั่นระเบิดออกและจางหาย */
     animation: explode 3s ease-out forwards;
 }
 
 @keyframes explode {
-    0% {
-        transform: translate(0, 0) scale(0);
-        opacity: 1;
-    }
-    100% {
-        /* ใช้ตัวแปรจาก JS ในการเคลื่อนที่ */
-        transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(1.5);
-        opacity: 0;
-    }
+    0% { transform: translate(0, 0) scale(0); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(1.5); opacity: 0; }
 }
 
 .swal2-confirm { background-color: #ff4d88 !important; }
@@ -102,31 +104,34 @@ p{ font-size:3vw; color:#ff4d88; z-index: 5;}
 
 <body>
 
-<h1>Happy Birthday น้องฝ้าย 🐽</h1>
-<p id="hintText">กดที่เค้กสิ</p>
-
-<div class="cupcake-wrapper" onclick="cakeClick()">
-    <div class="numbers">
-        <div class="num-item" style="position:relative;">
-            <span class="flame">🔥</span>
-            2
-        </div>
-        <div class="num-item" style="position:relative;">
-            <span class="flame">🔥</span>
-            1
-        </div>
+    <div class="header-area">
+        <h1>Happy Birthday น้องฝ้าย 🐽</h1>
+        <p id="hintText">กดที่คัพเค้กสิ</p>
     </div>
-    <div class="cupcake">🧁</div>
-</div>
+
+    <div class="cupcake-wrapper" onclick="cakeClick()">
+        <div class="numbers">
+            <div class="num-item" style="position:relative;">
+                <span class="flame">🔥</span>
+                2
+            </div>
+            <div class="num-item" style="position:relative;">
+                <span class="flame">🔥</span>
+                1
+            </div>
+        </div>
+        <div class="cupcake">🧁</div>
+    </div>
 
 <script>
 window.onload = function() {
     Swal.fire({
         title: 'วันนี้วันเกิดใครน้าาา? 🧁✨',
+        text: 'เลือกให้ถูกคนนะเจ้าของวันเกิดน่ะ!',
         icon: 'question',
         showDenyButton: true,
-        confirmButtonText: 'น้องฝ้ายแฟนแพรวา',
-        denyButtonText: 'หมูฝ้ายแฟนแพรวา',
+        confirmButtonText: 'น้องฝ้ายแฟนแพรวา 💖',
+        denyButtonText: 'หมูฝ้ายแฟนแพรวา 🐽',
         allowOutsideClick: false,
         background: '#fff',
         color: '#ff4d88'
@@ -148,9 +153,9 @@ let clickCount = 0
 let candleOut = false
 
 const popupPositions = [
-    {side:"left", top:"25%"},
-    {side:"right", top:"50%"},
-    {side:"left", top:"75%"}
+    {side:"left", top:"20%"},
+    {side:"right", top:"40%"},
+    {side:"left", top:"60%"}
 ]
 
 function showPopup(text){
@@ -166,36 +171,26 @@ function showPopup(text){
 }
 
 function createHearts(){
-    const amount = 150; // จำนวนหัวใจที่ระเบิดออก
+    const amount = 150;
     const container = document.body;
-
     for(let i=0; i<amount; i++){
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.innerHTML = ["💖", "💗", "💓", "💝", "✨"][Math.floor(Math.random() * 5)];
-        
-        // จุดเริ่มต้นอยู่ที่ตัวเค้ก (กลางจอ)
         heart.style.left = "50%";
-        heart.style.top = "55%";
+        heart.style.top = "75%"; // ระเบิดจากตำแหน่งคัพเค้กใหม่
 
-        // คำนวณมุมและระยะทางแบบวงกลม (พลุ)
-        const angle = Math.random() * Math.PI * 2; // สุ่มมุม 360 องศา
-        const velocity = Math.random() * 100 + 50; // ความแรงในการพุ่ง
-        
-        // แปลงมุมเป็นพิกัด X และ Y (พุ่งกระจายเต็มจอ)
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = Math.random() * 100 + 50;
         const tx = Math.cos(angle) * velocity + "vw";
         const ty = Math.sin(angle) * velocity + "vh";
-        const tr = (Math.random() * 360) + "deg"; // หมุนตัวหัวใจ
+        const tr = (Math.random() * 360) + "deg";
 
         heart.style.setProperty('--tx', tx);
         heart.style.setProperty('--ty', ty);
         heart.style.setProperty('--tr', tr);
-        
         heart.style.fontSize = (Math.random() * 30 + 15) + "px";
-
         container.appendChild(heart);
-        
-        // ลบออกเมื่อจบอนิเมชั่น
         setTimeout(() => { heart.remove(); }, 3000);
     }
 }
@@ -204,17 +199,15 @@ function cakeClick(){
     if(candleOut) return
     clickCount++
 
-    if(clickCount===1){ showPopup("รักหมูฝ้ายที่สุดในโลก") }
-    else if(clickCount===2){ showPopup("ขอให้สุขภาพแข็งแรง") }
-    else if(clickCount===3){ showPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า ><") }
+    if(clickCount===1){ showPopup("รักหมูฝ้ายที่สุดในโลก 💖") }
+    else if(clickCount===2){ showPopup("ขอให้สุขภาพแข็งแรง ✨") }
+    else if(clickCount===3){ showPopup("ขอให้รวยๆแล้วมาเลี้ยงเค้า >< 💸") }
     else if(clickCount===4){
         const flames = document.querySelectorAll(".flame");
         flames.forEach(f => f.style.display = "none");
-        
         document.getElementById("hintText").innerHTML = "<b>เป่าเทียนดับแล้ว! มีความสุขมากๆ นะคะ 🎉</b>";
-        
         candleOut = true;
-        createHearts(); // เรียกฟังก์ชันระเบิดพลุหัวใจ
+        createHearts();
     }
 }
 </script>
